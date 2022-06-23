@@ -1,0 +1,97 @@
+<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+	<script>//our scrip will come here 
+		$(() => {
+			console.log("page loaded succesfully");
+			$('#bookid').blur(() => {
+				let x = $('#bookid').val();
+				let parameterBook = {
+					data: { bookid: x },
+					url: "http://localhost:3700/getBookDetails",
+					type: "get",
+					datatype: "json",
+					success: (output) => {
+						console.log("data given by server" + output);
+
+						if (output.status) {
+							console.log("book acquired from server" + output.row)
+							$('#bookname').val(output.row.bookname);
+							$('#price').val(output.row.price);
+							$('#msg').text('bookid is found');
+						}
+
+						else {
+							console.log('bookid is not found');
+							$('#bookid').val("");
+							$('#bookname').val("");
+							$('#msg').val("not found");
+						}
+
+					},
+					error: (error) => {
+						console.log('error from server' + error);
+						$('#msg').val("could not connect to the server")
+					}
+				};
+				$.ajax(parameterBook);
+			});
+
+
+
+			$(() => {
+				console.log("page loaded succesfully");
+				$('#update').click(() => {
+					console.log('click event');
+					let x = $('#bookid').val();
+					let y = $('#bookname').val();
+					let z = $('#price').val();
+					let parameterBook = {
+						data: { bookid: x, bookname: y, price: z },
+						url: "http://localhost:3700/updateBook",
+						type: "get",
+						datatype: "json",
+						success: (output) => {
+							console.log("data given by server" + output);
+
+							if (output.status) {
+								console.log("book acquired from server" + output.row)
+								$('#bookid').val("");
+								$('#bookname').val("");
+								$('#price').val("");
+								$('#msg').text('updated successfully');
+							}
+
+							else {
+								console.log('not found');
+								$('#msg').val("not found");
+							}
+
+						},
+						error: (error) => {
+							console.log('error from server' + error);
+							$('#msg').val("could not connect to the server")
+						}
+					};
+					$.ajax(parameterBook);
+				});
+				</script>		
+</head >
+<body>
+				bookid:< input type="text" name="" id="bookid" >
+				<span id="msg"></span><br><br />
+				bookname: <input type="text" name="" id="bookname" ><br /><br />
+				price: <input type="text" name="" id="price" ><br /><br />
+
+				<input type="button" value="update book" id="update" />
+	</body>
+</html >
